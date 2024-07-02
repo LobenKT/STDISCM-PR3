@@ -21,7 +21,7 @@ def handle_request(start, end, thread_count):
     return [item for sublist in result_lists for item in sublist]  # Flatten the list of lists
 
 def main():
-    server_address = ('192.168.100.4', 10001)
+    server_address = ('192.168.56.1', 10001)
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(server_address)
         s.listen()
