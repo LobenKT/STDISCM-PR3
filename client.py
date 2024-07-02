@@ -10,7 +10,7 @@ def send_range(start, end, server_address):
 
 def main():
     start, end = map(int, input("Enter start and end of range: ").split())
-    server_address = ('localhost', 10000)  # Change to actual master server IP and port
+    server_address = ('192.168.100.17', 10000)  # IP and port of the master server
     primes = send_range(start, end, server_address)
     print("Primes received from server:")
     print(primes)

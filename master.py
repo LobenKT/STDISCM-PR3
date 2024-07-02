@@ -15,8 +15,8 @@ def handle_client(conn, slave_address):
     print("Result sent back to client.")
 
 def main():
-    slave_address = ('localhost', 10001)  # Change to actual slave server IP and port
-    server_address = ('', 10000)
+    slave_address = ('192.168.100.4', 10001)  # IP and port of the slave server on Machine 2
+    server_address = ('192.168.100.17', 10000)
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(server_address)
         s.listen()

@@ -9,7 +9,7 @@ def is_prime(n):
     return True
 
 def main():
-    server_address = ('', 10001)
+    server_address = ('192.168.XX.XX', 10001)  # IP of this machine
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(server_address)
         s.listen()
