@@ -23,7 +23,9 @@ def handle_request(start, end, thread_count):
 def main():
     thread_counts = [2**i for i in range(0, 11)]  # Generates [1, 2, 4, ..., 1024]
     server_address = ('192.168.100.17', 10000)
-    slave_address = ('192.168.100.4', 10001)  # Address of the slave server
+    slave_address = ('192.168.100.4', 10001)
+    #server_address = ('192.168.56.1', 10000)
+    #slave_address = ('192.168.254.156', 10001)  # Address of the slave server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(server_address)
         s.listen()
@@ -44,7 +46,9 @@ def main():
                     slave_result = slave_socket.recv(2048).decode()
                 
                 # Combine results and send back to client
-                total_primes = len(master_primes) + int(slave_result.split()[-2])
+                #print(master_primes)
+                #print(slave_result.split())
+                total_primes = len(master_primes) + int(slave_result.split()[-5])
                 response = f"{thread_count} threads: Found {total_primes} primes."
                 conn.sendall(response.encode())
                 print(response)
