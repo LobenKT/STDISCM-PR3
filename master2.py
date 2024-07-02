@@ -27,7 +27,7 @@ def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(server_address)
         s.listen()
-        print(f"Master server is running and listening at {server_address}...")
+        print(f"Master server (distributed) is running and listening at {server_address}...")
         while True:
             conn, _ = s.accept()
             range_data = conn.recv(1024).decode()
