@@ -66,8 +66,8 @@ def handle_client(conn, slave_socket, slave_active, thread_counts):
 
 def main():
     thread_counts = [2**i for i in range(0, 11)]
-    server_address = ('192.168.100.4', 10001)
-    slave_address = ('192.168.100.17', 10000)
+    server_address = ('192.168.56.1', 10001)
+    slave_address = ('192.168.254.156', 1000)
     slave_socket, slave_active = attempt_slave_connection(slave_address)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
