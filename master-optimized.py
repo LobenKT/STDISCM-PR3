@@ -35,14 +35,18 @@ def handle_request(start, end, thread_count, small_primes):
     return [item for sublist in result_lists for item in sublist]
 
 def attempt_slave_connection(slave_address):
+    slave_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        slave_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         slave_socket.connect(slave_address)
         print("Connected to slave server successfully.")
         return slave_socket, True
     except socket.error as e:
         print(f"Failed to connect to slave server: {e}")
         return None, False
+    finally:
+        # It's a good practice to set a timeout for socket operations to avoid hanging indefinitely
+        slave_socket.settimeout(10)
+
 
 def handle_client(conn, slave_socket, slave_active, thread_counts, small_primes):
     try:
