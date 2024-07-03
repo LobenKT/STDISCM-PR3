@@ -6,7 +6,7 @@ def is_prime(n):
     if n <= 1:
         return False
     for i in range(2, int(n ** 0.5) + 1):
-        if n % i == 0:
+        if n % i == 0 and n!=2:
             return False
     return True
 
@@ -66,8 +66,8 @@ def handle_client(conn, slave_socket, slave_active, thread_counts):
 
 def main():
     thread_counts = [2**i for i in range(0, 11)]
-    server_address = ('192.168.100.4', 10001)
-    slave_address = ('192.168.100.15', 10002)
+    server_address = ('192.168.56.1', 10001)
+    slave_address = ('192.168.254.156', 10002)
     slave_socket, slave_active = attempt_slave_connection(slave_address)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
