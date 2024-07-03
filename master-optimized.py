@@ -44,10 +44,13 @@ def attempt_slave_connection(slave_address):
         print(f"Failed to connect to slave server: {e}")
         return None, False
 
-def handle_client(conn, slave_socket, slave_active, thread_counts, start, end, small_primes):
+def handle_client(conn, slave_socket, slave_active, thread_counts, small_primes):
     try:
+        range_data = conn.recv(1024).decode()
+        start, end = map(int, range_data.split(','))
+        print(f"Client has requested primes from {start} to {end}.")
         for thread_count in thread_counts:
-            print(f"Received range: {start} to {end}, calculating with {thread_count} threads...")
+            print(f"Calculating with {thread_count} threads...")
             start_time = time.time()
             if slave_active:
                 mid_point = start + (end - start) // 2
@@ -63,7 +66,7 @@ def handle_client(conn, slave_socket, slave_active, thread_counts, start, end, s
             conn.sendall(response.encode())
             print(response)
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error handling client request: {e}")
     finally:
         conn.close()
 
@@ -71,7 +74,7 @@ def main():
     thread_counts = [2**i for i in range(0, 11)]
     server_address = ('192.168.100.4', 10001)
     slave_address = ('192.168.100.17', 10000)
-    small_primes = sieve_of_eratosthenes(int(10**4))  # Example limit for small primes calculation
+    small_primes = sieve_of_eratosthenes(int(10**4))  # Precompute small primes for efficiency
 
     slave_socket, slave_active = attempt_slave_connection(slave_address)
 
@@ -81,7 +84,7 @@ def main():
         print(f"Master server is running and listening at {server_address}...")
         while True:
             conn, _ = s.accept()
-            handle_client(conn, slave_socket, slave_active, thread_counts, 1, 10**8, small_primes)
+            handle_client(conn, slave_socket, slave_active, thread_counts, small_primes)
 
 if __name__ == "__main__":
     main()
