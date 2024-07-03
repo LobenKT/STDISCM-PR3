@@ -6,7 +6,7 @@ def is_prime(n):
     if n <= 1:
         return False
     for i in range(2, int(n ** 0.5) + 1):
-        if n % i == 0:
+        if n % i == 0 and n!=2:
             return False
     return True
 
@@ -22,7 +22,7 @@ def handle_request(start, end, thread_count):
     return [item for sublist in result_lists for item in sublist]
 
 def main():
-    server_address = ('192.168.100.15', 10002)
+    server_address = ('192.168.100.17', 10000)
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(server_address)
         s.listen()
