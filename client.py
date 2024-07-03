@@ -8,7 +8,7 @@ def send_range_and_receive_results(start, end, server_address):
         s.connect(server_address)
         print("Connection established.")
         
-        # Prepare and send the data range to the server
+        # Prepare and send the data range to the master server
         message = f"{start},{end}".encode()
         s.sendall(message)
         print(f"Sent to server: {start} to {end}")
@@ -33,7 +33,7 @@ def main():
         print("Invalid input. Please enter two integers.")
         return
 
-    server_address = ('192.168.100.4', 10001)  # IP and port of the master server
+    server_address = ('192.168.56.1', 10001)  # IP and port of the master server
     send_range_and_receive_results(start, end, server_address)
 
 if __name__ == "__main__":
