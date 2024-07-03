@@ -34,18 +34,24 @@ def handle_request(start, end, thread_count, small_primes):
         result_lists = executor.map(lambda x: find_primes_in_range(x[0], x[1]), args)
     return [item for sublist in result_lists for item in sublist]
 
-def attempt_slave_connection(slave_address):
+def attempt_slave_connection(slave_address, max_attempts=5):
     slave_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        slave_socket.connect(slave_address)
-        print("Connected to slave server successfully.")
-        return slave_socket, True
-    except socket.error as e:
-        print(f"Failed to connect to slave server: {e}")
-        return None, False
-    finally:
-        # It's a good practice to set a timeout for socket operations to avoid hanging indefinitely
-        slave_socket.settimeout(10)
+    attempt_count = 0
+    
+    while attempt_count < max_attempts:
+        try:
+            slave_socket.connect(slave_address)
+            print("Connected to slave server successfully.")
+            slave_socket.settimeout(10)  # Set a timeout for all socket operations
+            return slave_socket, True
+        except socket.error as e:
+            attempt_count += 1
+            print(f"Failed to connect to slave server (attempt {attempt_count}/{max_attempts}): {e}")
+            time.sleep(5)  # Wait for 5 seconds before retrying
+
+    print(f"Unable to connect to slave after {max_attempts} attempts. Master will handle all calculations.")
+    return None, False
+
 
 
 def handle_client(conn, slave_socket, slave_active, thread_counts, small_primes):
@@ -76,8 +82,8 @@ def handle_client(conn, slave_socket, slave_active, thread_counts, small_primes)
 
 def main():
     thread_counts = [2**i for i in range(0, 11)]
-    server_address = ('192.168.100.4', 10001)
-    slave_address = ('192.168.100.17', 10000)
+    server_address = ('192.168.100.17', 1000)
+    slave_address = ('192.168.100.6', 10002)
     small_primes = sieve_of_eratosthenes(int(10**4))  # Precompute small primes for efficiency
 
     slave_socket, slave_active = attempt_slave_connection(slave_address)
